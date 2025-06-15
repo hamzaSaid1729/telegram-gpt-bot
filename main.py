@@ -70,17 +70,11 @@ async def handle_message(update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❌ Please send a valid PhD opportunity link.")
 
 # ✅ NEW Application, NO `.updater` anywhere
+
+# ✅ NEW Application, NO `.updater` anywhere
 app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-# ✅ Async bot runner
+# ✅ Start the bot directly
 if __name__ == "__main__":
-    import asyncio
-
-    async def main():
-        await app.initialize()
-        await app.start()
-        print("✅ Bot is now running.")
-        await app.run_polling()
-
-    asyncio.run(main())
+    app.run_polling()
