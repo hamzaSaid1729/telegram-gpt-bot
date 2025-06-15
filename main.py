@@ -1,18 +1,16 @@
 import os
-from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
-from openai import OpenAI
 import pandas as pd
 from datetime import datetime
+from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
+from openai import OpenAI
 
-# ✅ Load secrets from environment variables (KEYS, not values)
+# Environment variables
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 FILENAME = 'phd_opportunities.xlsx'
 
-# ✅ OpenAI client setup
+# OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)
-
-
 
 def extract_info_with_gpt(phd_url):
     prompt = f"""
@@ -71,9 +69,11 @@ async def handle_message(update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("❌ Please send a valid PhD opportunity link.")
 
+# ✅ NEW Application, NO `.updater` anywhere
 app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
+# ✅ Async bot runner
 if __name__ == "__main__":
     import asyncio
 
@@ -81,6 +81,6 @@ if __name__ == "__main__":
         await app.initialize()
         await app.start()
         print("✅ Bot is now running.")
-        await app.run_polling()  # this replaces old `updater.start_polling()`
+        await app.run_polling()
 
     asyncio.run(main())
