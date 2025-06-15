@@ -76,6 +76,11 @@ app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(app.initialize())
-    asyncio.run(app.start())
-    asyncio.run(app.updater.start_polling())
+
+    async def main():
+        await app.initialize()
+        await app.start()
+        print("✅ Bot is now running.")
+        await app.run_polling()  # this replaces old `updater.start_polling()`
+
+    asyncio.run(main())
